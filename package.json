@@ -1,0 +1,42 @@
+{
+  "name": "element-table3",
+  "private": false,
+  "version": "0.1.5",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "main": "./lib/element-table3.umd.js",
+  "module": "./lib/element-table3.es.js",
+  "files": ["lib"],
+  "exports": {
+		".": {
+			"import": "./lib/element-table3.es.js",
+			"require": "./lib/element-table3.umd.js"
+		}
+	},
+  "dependencies": {
+    "@types/node": "^18.6.4",
+    "element-plus": "2.2.0",
+    "unplugin-auto-import": "^0.10.3",
+    "unplugin-vue-components": "^0.22.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue": "^3.2.37",
+    "vue-tsc": "^0.38.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zjiafeng/element-table3"
+  },
+  "bugs": {
+    "url": "https://github.com/zjiafeng/element-table3/issues",
+    "email": "2621275142@qq.com"
+  }
+}
