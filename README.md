@@ -1,5 +1,5 @@
 <p align="center">
-    element-form2
+    element-table3
 </p>
 <p align="center">
   <a href="https://github.com/vuejs/core/">
