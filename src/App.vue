@@ -53,41 +53,24 @@ const handleBatchRemove = (list: any[]) => {
 </script>
 
 <template>
-    <element-table3
-      ref="table"
-      :tableConfig="tableConfig"
-      :tableData="state.tableData"
-      :current="state.form.page"
-      :pageSize="state.form.size"
-      :handleRowDbClick="handleRowDbClick"
-      @tableChange="tableChange"
-    >
-      <template v-slot:tableButtons="{ scope, multipleSelection }">
-        <el-button @click="handleBatchRemove(multipleSelection)"
-          >批量删除</el-button
-        >
-      </template>
-      <template v-slot:amount2="{ scope }">
-        <el-tag>{{ scope.row.amount2 }}</el-tag>
-      </template>
-      <template v-slot:amount3="{ scope }">
-        <el-link type="primary" @click="handleLink(scope.row.amount3)">{{
-          scope.row.amount3
-        }}</el-link>
-      </template>
-      <template
-        v-for="(column, index) in tableConfig.columns.filter((item) => {
-          return (item.slotName && item.component) || false;
-        })"
-        v-slot:[`${column?.slotName}`]="{ scope }"
-      >
-        <component
-          :key="index"
-          :is="column.component"
-          :handleDelete="handleDelete"
-          :buttonName="column.label"
-          :scope="scope"
-        ></component>
-      </template>
-    </element-table3>
+  <element-table3 ref="table" :tableConfig="tableConfig" :tableData="state.tableData" :current="state.form.page"
+    :pageSize="state.form.size" :handleRowDbClick="handleRowDbClick" @tableChange="tableChange">
+    <template v-slot:tableButtons="{ scope, multipleSelection }">
+      <el-button @click="handleBatchRemove(multipleSelection)">批量删除</el-button>
+    </template>
+    <template v-slot:amount2="{ scope }">
+      <el-tag>{{ scope.row.amount2 }}</el-tag>
+    </template>
+    <template v-slot:amount3="{ scope }">
+      <el-link type="primary" @click="handleLink(scope.row.amount3)">{{
+        scope.row.amount3
+      }}</el-link>
+    </template>
+    <template v-for="(column, index) in tableConfig.columns.filter((item) => {
+      return (item.slotName && item.component) || false;
+    })" v-slot:[`${column?.slotName}`]="{ scope }">
+      <component :key="index" :is="column.component" :handleDelete="handleDelete" :buttonName="column.label"
+        :scope="scope"></component>
+    </template>
+  </element-table3>
 </template>
