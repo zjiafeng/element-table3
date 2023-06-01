@@ -50,6 +50,20 @@ const handleDelete = (row: any) => {
 const handleBatchRemove = (list: any[]) => {
   arrRemove(list, state.tableData);
 };
+
+// 表格操作事件
+const activeRow: any = ref(null)
+const tActionClick = async (row: any, flag: string) => {
+  let copyRow = JSON.parse(JSON.stringify(row))
+  activeRow.value = copyRow
+  console.log(copyRow, flag);
+  if (flag === 'edit') {
+
+  } else if (flag === 'delete') {
+
+  }
+};
+
 </script>
 
 <template>
@@ -70,7 +84,7 @@ const handleBatchRemove = (list: any[]) => {
       return (item.slotName && item.component) || false;
     })" v-slot:[`${column?.slotName}`]="{ scope }">
       <component :key="index" :is="column.component" :handleDelete="handleDelete" :buttonName="column.label"
-        :scope="scope"></component>
+        :scope="scope" @tActionClick="tActionClick"></component>
     </template>
   </element-table3>
 </template>

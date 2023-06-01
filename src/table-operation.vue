@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { getCurrentInstance } from 'vue'
-const props = defineProps(['scope', 'handleDelete'])
-const parent = getCurrentInstance()?.parent;
+const props = defineProps(['scope'])
+const emits = defineEmits(['tActionClick'])
 
 const handleEdit = () => {
-    console.log(props.scope.row);
+    emits('tActionClick', props.scope.row, 'edit')
 }
 
 const handleDel = () => {
-    props.handleDelete(props.scope.row)
+    emits('tActionClick', props.scope.row, 'delete')
 }
 </script>
 
