@@ -68,7 +68,8 @@ const tActionClick = async (row: any, flag: string) => {
 
 <template>
   <element-table3 ref="table" :tableConfig="tableConfig" :tableData="state.tableData" :current="state.form.page"
-    :pageSize="state.form.size" :handleRowDbClick="handleRowDbClick" @tableChange="tableChange">
+    :pageSize="state.form.size" :handleRowDbClick="handleRowDbClick" @tableChange="tableChange"
+    @tActionClick="tActionClick">
     <template v-slot:tableButtons="{ scope, multipleSelection }">
       <el-button @click="handleBatchRemove(multipleSelection)">批量删除</el-button>
     </template>
@@ -79,12 +80,6 @@ const tActionClick = async (row: any, flag: string) => {
       <el-link type="primary" @click="handleLink(scope.row.amount3)">{{
         scope.row.amount3
       }}</el-link>
-    </template>
-    <template v-for="(column, index) in tableConfig.columns.filter((item) => {
-      return (item.slotName && item.component) || false;
-    })" v-slot:[`${column?.slotName}`]="{ scope }">
-      <component :key="index" :is="column.component" :handleDelete="handleDelete" :buttonName="column.label"
-        :scope="scope" @tActionClick="tActionClick"></component>
     </template>
   </element-table3>
 </template>

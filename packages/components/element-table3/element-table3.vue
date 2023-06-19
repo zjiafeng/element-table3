@@ -15,7 +15,7 @@ import { ref, reactive, computed, watch, watchEffect } from "vue";
 import type { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
 import { sortMax } from "../../utils/index";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
-const emits = defineEmits(["tableChange"]);
+const emits = defineEmits(["tableChange", "tActionClick"]);
 
 const mainTable = ref<any>(null);
 const locale = ref<any>(zhCn);
@@ -228,6 +228,10 @@ const arraySpanMethod = ({
   }
 };
 
+const handleActionClick = (row: any, flag: string) => {
+  emits('tActionClick', row, flag)
+}
+
 defineExpose({
   setLoading: (flag: boolean) => (state.loading = flag),
 });
@@ -235,83 +239,40 @@ defineExpose({
 
 <template>
   <el-config-provider :locale="locale">
-    <slot
-      name="tableButtons"
-      v-bind:mainTable="$refs.mainTable"
-      v-bind:multipleSelection="state.multipleSelection"
-    >
+    <slot name="tableButtons" v-bind:mainTable="$refs.mainTable" v-bind:multipleSelection="state.multipleSelection">
     </slot>
-    <el-table
-      ref="mainTable"
-      class="base-table"
-      :span-method="arraySpanMethod"
-      :data="currentTableData"
-      tooltip-effect="light"
-      :header-cell-style="defaultTableConfig.elTableHeaderStyle"
-      @sort-change="sortChange"
-      @selection-change="handleSelectionChange"
-      @row-dblclick="rowDblClick"
-      @current-change="rowClick"
-      border
-      v-loading="state.loading"
-      v-bind="tableConfig?.parameter && tableConfig.parameter?.extendTable"
-      stripe
-    >
-      <el-table-column
-        v-if="tableConfig?.parameter && tableConfig.parameter?.selection"
-        type="selection"
-        width="55"
-      ></el-table-column>
-      <el-table-column
-        v-if="tableConfig?.parameter && tableConfig.parameter?.index"
-        label="序号"
-        type="index"
-        width="55"
-      >
+    <el-table ref="mainTable" class="base-table" :span-method="arraySpanMethod" :data="currentTableData"
+      tooltip-effect="light" :header-cell-style="defaultTableConfig.elTableHeaderStyle" @sort-change="sortChange"
+      @selection-change="handleSelectionChange" @row-dblclick="rowDblClick" @current-change="rowClick" border
+      v-loading="state.loading" v-bind="tableConfig?.parameter && tableConfig.parameter?.extendTable" stripe>
+      <el-table-column v-if="tableConfig?.parameter && tableConfig.parameter?.selection" type="selection"
+        width="55"></el-table-column>
+      <el-table-column v-if="tableConfig?.parameter && tableConfig.parameter?.index" label="序号" type="index" width="55">
         <template #default="scope">
           <span>{{ scope.$index + 1 + (current - 1) * pageSize }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-for="(column, index) in currentColumns"
-        :key="index"
-        :prop="column.prop"
-        :label="column.label"
-        :sortable="column.sortable"
-        :width="column.width"
-        :formatter="column.formatterFun"
-        :show-overflow-tooltip="!!column.showOverflowTooltip"
-        :align="column.align"
-        :fixed="column.fixed"
-        v-bind="column?.extendTableColumn"
-      >
-        <template v-slot:[getSlotName(column.slotName)]="scope">
+      <el-table-column v-for="(column, index) in currentColumns" :key="index" :prop="column.prop" :label="column.label"
+        :sortable="column.sortable" :width="column.width" :formatter="column.formatterFun"
+        :show-overflow-tooltip="!!column.showOverflowTooltip" :align="column.align" :fixed="column.fixed"
+        v-bind="column?.extendTableColumn">
+        <template v-if="column.component" #default="scope">
+          <component :is="column.component" :scope="scope" @tActionClick="handleActionClick"></component>
+        </template>
+        <template v-else v-slot:[getSlotName(column.slotName)]="scope">
           <slot :name="column.slotName" v-bind:scope="scope"></slot>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      v-if="
-        tableConfig?.parameter &&
-        tableConfig.parameter?.pagination &&
-        totalAll
-      "
-      :style="`justify-content:${
-        tableConfig.parameter?.extendPagination?.paginationAlign ||
-        defaultTableConfig.paginationAlign
-      }`"
-      :page-size="pageSize"
-      :current-page="current"
-      :page-sizes="defaultTableConfig.pageSizes"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total || totalAll"
-      @current-change="handlerChange"
-      @size-change="handleSizeChange"
-      background
-      v-bind="
-        tableConfig?.parameter && tableConfig.parameter?.extendPagination
-      "
-    ></el-pagination>
+    <el-pagination v-if="tableConfig?.parameter &&
+      tableConfig.parameter?.pagination &&
+      totalAll
+      " :style="`justify-content:${tableConfig.parameter?.extendPagination?.paginationAlign ||
+    defaultTableConfig.paginationAlign
+    }`" :page-size="pageSize" :current-page="current" :page-sizes="defaultTableConfig.pageSizes"
+      layout="total, sizes, prev, pager, next, jumper" :total="total || totalAll" @current-change="handlerChange"
+      @size-change="handleSizeChange" background v-bind="tableConfig?.parameter && tableConfig.parameter?.extendPagination
+        "></el-pagination>
   </el-config-provider>
 </template>
 

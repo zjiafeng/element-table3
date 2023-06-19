@@ -53,7 +53,6 @@ export const tableConfig = {
     },
     {
       label: '操作',
-      slotName: 'tableOperation',
       component: tableOperation
     }
   ]
